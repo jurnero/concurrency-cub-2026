@@ -31,6 +31,23 @@ jobs:
       - name: Run ${{ matrix.test }}
         run: ./gradlew test --tests ${{ matrix.test }} --no-daemon
 
+      - name: Show Lincheck errors in the job summary
+        if: failure()
+        shell: python3 {0}
+        run: |
+          import glob, os, xml.etree.ElementTree as ET
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("## ❌ ${{ matrix.test }} failed\n\n")
+              for file in sorted(glob.glob("build/test-results/test/*.xml")):
+                  for case in ET.parse(file).getroot().iter("testcase"):
+                      for failure in list(case.iter("failure")) + list(case.iter("error")):
+                          text = failure.text or failure.get("message") or ""
+                          # Keep the Lincheck explanation, drop the JVM stack frames.
+                          lines = [l for l in text.splitlines()
+                                   if not l.lstrip().startswith(("at ", "... ")) or l.lstrip().startswith("|")]
+                          summary.write(f"<details open><summary><b>{case.get('name')}</b></summary>\n\n")
+                          summary.write("```text\n" + "\n".join(lines).strip() + "\n```\n\n</details>\n\n")
+
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v7

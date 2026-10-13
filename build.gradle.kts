@@ -26,6 +26,14 @@ tasks {
     test {
         maxHeapSize = "10g"
         jvmArgs("-XX:+EnableDynamicAgentLoading")
+        // Print the full Lincheck error explanation (incorrect results and the interleaving).
+        testLogging {
+            events("passed", "skipped", "failed")
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+            showExceptions = true
+            showCauses = true
+            showStackTraces = false
+        }
     }
 }
 
