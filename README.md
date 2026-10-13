@@ -1,5 +1,8 @@
 # Intensive Course on Concurrent Programming
 
+All tasks are tested automatically by GitHub Actions on every push
+(see the *Actions* tab of your repository).
+
 ## Day 1: Locks and Stack
 
 ### Coarse-grained bank
