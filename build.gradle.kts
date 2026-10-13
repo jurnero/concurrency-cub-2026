@@ -7,7 +7,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
     testImplementation(kotlin("test-junit"))
-    testImplementation("org.jetbrains.lincheck:lincheck:3.3")
+    testImplementation("org.jetbrains.lincheck:lincheck:3.7")
 }
 
 repositories {
